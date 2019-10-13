@@ -1,0 +1,22 @@
+{
+  "name": "dmbot",
+  "version": "1.0.0",
+  "description": "A discord bot that helps a DM if trying to play a tabletop rpg online",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/schmibbs/Projects.git"
+  },
+  "author": "Joe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/schmibbs/Projects/issues"
+  },
+  "homepage": "https://github.com/schmibbs/Projects#readme",
+  "dependencies": {
+    "discord.js": "^11.5.1"
+  }
+}
