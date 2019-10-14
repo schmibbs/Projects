@@ -2,6 +2,7 @@ const Discord = require('discord.js');              //create a variable (using k
 const { prefix, token} = require('./config.json');  //puts properties from config so that you can use the values defined there
 const client = new Discord.Client();                
 const dummyVal = -777;
+const f = new functions();
 
 //boot msg
 client.once('ready', () => {
