@@ -3,6 +3,8 @@
         "player1": [{
             "name": "schmibbs",
             "role": "fisherman",
+            "confidence": 0,
+            "healthStatus": 3,
             "physical": [{
                 "athleticism": 6,
                 "athleticismEXP": 0,
