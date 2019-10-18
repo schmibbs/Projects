@@ -2,7 +2,7 @@ const Discord = require('discord.js');              //create a variable (using k
 const { prefix, token} = require('./config.json');  //puts properties from config so that you can use the values defined there
 const client = new Discord.Client();                
 const dummyVal = -777;
-const f = new functions();
+const func = new Functions("testName");
 
 //boot msg
 client.once('ready', () => {
@@ -17,7 +17,9 @@ client.on('message', message => {
         message.channel.send("printing generic test message");
     }
     else if (message.content.startsWith(prefix + "roll")) {
-        message.channel.send("you rolled: " + dummyVal);
+        for (i in 5) {
+            message.channel.send("test:" + i + "you rolled: " + f.randNumTest(20));
+        }
     }
 })
 

@@ -1,6 +1,6 @@
 class Functions {
     //constructor
-    Functions(name) {
+    constructor(name) {
         this.name = name;
     }
 
