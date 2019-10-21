@@ -3,7 +3,8 @@ const FuncOBJ = require('./functions.js');
 const { prefix, token} = require('./config.json');  //puts properties from config so that you can use the values defined there
 const client = new Discord.Client(); 
 const funcs = new FuncOBJ("testName");
-const dummyVal = -777;
+var basicLimit;
+var dieArr = [];
 
 //boot msg
 client.once('ready', () => {
@@ -18,9 +19,32 @@ client.on('message', message => {
         message.channel.send("printing generic test message");
     }
     else if (message.content.startsWith(prefix + "roll")) {
-        for (i in 5) {
-            message.channel.send("test:" + i + "you rolled: " + funcs.randNumTest(20));
+        if (basicLimit == NaN || basicLimit == null){
+            message.channel.send("Would you like to use multiple dies?");
+            if (message.content.startsWith("y") || message.content.startsWith("Y")) {
+                message.channel.send("Enter the amount of dies, interval, and top limit of those dies seperated by spaces and seperate sets with commas." +
+                "\n\nEX 2 1 6, 1 10 100 will make 2 standard dies and 1 that goes to 100 in intervals of 10");
+
+                var amt;
+                var interval;
+                var limit;
+                for (var i = 0; i < message.content.length; i++) {
+                    //set the amount of die
+                    //set the interval
+                    //set the upper limit
+                    //push to dieArr
+                    //look for comma to see if there are more die
+                    //restart from top o/w done setting die and can roll the set
+                }
+            }
+            else {
+                message.channel.send("Set the upper limit of what to roll from");
+                basicLimit = parseInt(message.content);
+            }
         }
+
+        message.channel.send("You rolled: " + funcs.randNum(basicLimit));
+        
     }
 })
 
