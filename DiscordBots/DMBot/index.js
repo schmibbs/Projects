@@ -1,8 +1,9 @@
 const Discord = require('discord.js');              //create a variable (using kw 'const') to get node modules from discord.js
+const FuncOBJ = require('./functions.js');
 const { prefix, token} = require('./config.json');  //puts properties from config so that you can use the values defined there
-const client = new Discord.Client();                
+const client = new Discord.Client(); 
+const funcs = new FuncOBJ("testName");
 const dummyVal = -777;
-const func = new Functions("testName");
 
 //boot msg
 client.once('ready', () => {
@@ -18,7 +19,7 @@ client.on('message', message => {
     }
     else if (message.content.startsWith(prefix + "roll")) {
         for (i in 5) {
-            message.channel.send("test:" + i + "you rolled: " + f.randNumTest(20));
+            message.channel.send("test:" + i + "you rolled: " + funcs.randNumTest(20));
         }
     }
 })
