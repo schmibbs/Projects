@@ -1,10 +1,15 @@
 const Discord = require('discord.js');              //create a variable (using kw 'const') to get node modules from discord.js
 const FuncOBJ = require('./functions.js');
+const DieOBJ = require('./die.js');
 const { prefix, token} = require('./config.json');  //puts properties from config so that you can use the values defined there
 const client = new Discord.Client(); 
 const funcs = new FuncOBJ("testName");
-var basicLimit;
+const die_1 = new DieOBJ(1, 6);
+const critResponses = ["https://i.imgur.com/dhMeAzK.gif", "C R I T", "Critical Roll!!", "less goooooooooo"];
+const lossResponses = [":b:ruh", "i cri everytiem", "I can't believe you've done this", "get rekt"];
+var basicLimit = 20;
 var dieArr = [];
+var response;
 
 //boot msg
 client.once('ready', () => {
@@ -19,9 +24,11 @@ client.on('message', message => {
         message.channel.send("printing generic test message");
     }
     else if (message.content.startsWith(prefix + "roll")) {
+        
+        /*
         if (basicLimit == NaN || basicLimit == null){
             message.channel.send("Would you like to use multiple dies?");
-            if (message.content.startsWith("y") || message.content.startsWith("Y")) {
+            if (message.content.startsWith("y", 0) || message.content.startsWith("Y", 0)) {
                 message.channel.send("Enter the amount of dies, interval, and top limit of those dies seperated by spaces and seperate sets with commas." +
                 "\n\nEX 2 1 6, 1 10 100 will make 2 standard dies and 1 that goes to 100 in intervals of 10");
 
@@ -42,9 +49,13 @@ client.on('message', message => {
                 basicLimit = parseInt(message.content);
             }
         }
-
-        message.channel.send("You rolled: " + funcs.randNum(basicLimit));
-        
+        */
+        var rollRes = die_1.standardRoll(basicLimit);
+        message.channel.send("You rolled: " + rollRes);
+        if (rollRes == 20)
+            message.channel.send(critResponses[Math.floor(Math.random() * critResponses.length)]);
+        else if (rollRes == 1)
+            message.channel.send(lossResponses[Math.floor(Math.random() * lossResponses.length)]);
     }
 })
 

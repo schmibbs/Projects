@@ -8,6 +8,15 @@ class Functions {
     randNum(upperLim) {
         return Math.floor(Math.random() * upperLim) + 1;
     }
+
+    waitPls(str, desiredResponse) {
+        if (str == desiredResponse) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }
 
 //used to keep progress from previous games
