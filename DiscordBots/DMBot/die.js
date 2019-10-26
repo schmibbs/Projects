@@ -5,6 +5,14 @@ class Die {
         this.limit = limit;
     }
 
+    getInterval() {
+        return this.interval;
+    }
+
+    getLimit() {
+        return this.limit;
+    }
+
     //used when you are rolling a number from 1..n in single digit increments
     standardRoll(limit){
         return Math.floor(Math.random() * limit) + 1;

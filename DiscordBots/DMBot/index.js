@@ -4,7 +4,7 @@ const DieOBJ = require('./die.js');
 const { prefix, token} = require('./config.json');  //puts properties from config so that you can use the values defined there
 const client = new Discord.Client(); 
 const funcs = new FuncOBJ("testName");
-const die_1 = new DieOBJ(1, 6);
+const die_1 = new DieOBJ(1, 20);
 const critResponses = ["https://i.imgur.com/dhMeAzK.gif", "C R I T", "Critical Roll!!", "less goooooooooo"];
 const lossResponses = [":b:ruh", "i cri everytiem", "I can't believe you've done this", "get rekt"];
 var basicLimit = 20;
@@ -23,39 +23,67 @@ client.on('message', message => {
     if(message.content.startsWith(prefix + "msg")) {
         message.channel.send("printing generic test message");
     }
-    else if (message.content.startsWith(prefix + "roll")) {
-        
-        /*
-        if (basicLimit == NaN || basicLimit == null){
-            message.channel.send("Would you like to use multiple dies?");
-            if (message.content.startsWith("y", 0) || message.content.startsWith("Y", 0)) {
-                message.channel.send("Enter the amount of dies, interval, and top limit of those dies seperated by spaces and seperate sets with commas." +
-                "\n\nEX 2 1 6, 1 10 100 will make 2 standard dies and 1 that goes to 100 in intervals of 10");
 
-                var amt;
-                var interval;
-                var limit;
-                for (var i = 0; i < message.content.length; i++) {
-                    //set the amount of die
-                    //set the interval
-                    //set the upper limit
-                    //push to dieArr
-                    //look for comma to see if there are more die
-                    //restart from top o/w done setting die and can roll the set
-                }
-            }
-            else {
-                message.channel.send("Set the upper limit of what to roll from");
-                basicLimit = parseInt(message.content);
-            }
-        }
-        */
+    if (message.content.startsWith(prefix + "roll")) {
         var rollRes = die_1.standardRoll(basicLimit);
         message.channel.send("You rolled: " + rollRes);
         if (rollRes == 20)
             message.channel.send(critResponses[Math.floor(Math.random() * critResponses.length)]);
         else if (rollRes == 1)
             message.channel.send(lossResponses[Math.floor(Math.random() * lossResponses.length)]);
+    }
+
+    if (message.content.startsWith(prefix + "setdie")) {
+        var argIndex = 9;
+        //console.log("Len--> " + message.content.length);
+        if (message.content.length - argIndex <= 0) {
+            message.channel.send("You need to tell me what you want! Enter die like this..\n\nAmount interval max, Amount interval max, Amou..");
+        }
+        else {
+            var arg = message.content.substring(argIndex);
+            console.log("\nDie data\n--------\nAmount: " + parseInt(arg) + "\nInterval: " + parseInt(arg.substring(2)) + "\nLimit: " + parseInt(arg.substring(4)));
+            for (argIndex; argIndex < message.content.length; argIndex++) {
+                //arg = message.content.substring(argIndex);
+                console.log(arg);
+                //just iterate past the comma
+                if (arg[argIndex] == ',') {
+                    if (arg[argIndex + 1] == ' ') {
+                        argIndex++;
+                    }
+                }        
+                //check if index is at an number and parse the arguments if so
+                else if (!isNaN(message.content[argIndex])){    
+                    var amtOfDiceToMake = parseInt(arg);
+                    var interval = parseInt(arg.substring(2));
+                    var limit = parseInt(arg.substring(4));
+                    for (var i = 0; i < amtOfDiceToMake; i++) {
+                        dieArr.push(new DieOBJ(interval, limit));
+                    }
+                    //move to the final digit to get ready for the next batch of args
+                    var j = 0;
+                    while (arg[j] != ',' && j < message.content.length)
+                        j++;
+                    if (arg[j+1] == ' ')
+                        j++;
+                    j++;
+                    arg = arg.substring(j);
+                    argIndex += j;
+                }
+            }
+            message.channel.send("Finished creating the dice!");
+        }
+    }
+
+    if (message.content.startsWith(prefix + "checkDie")) {
+        message.channel.send("The following dies are in play");
+        if (dieArr[0] == null) {
+            message.channel.send("There are no dice. Add some by typing this\n\">>setdie amount interval max, amount interval max, amo..\"");
+        }
+        else {
+            for (die in dieArr)
+                message.channel.send("Die number " + (+die + 1) + ": (" + dieArr[die].getInterval() + ", " + dieArr[die].getLimit() + ")");
+            message.channel.send("Finished listing all of the dice in play");
+        }
     }
 })
 
