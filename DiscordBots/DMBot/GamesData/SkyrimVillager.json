@@ -1,47 +1,88 @@
 {
     "players": [{
-        "player1": [{
-            "name": "schmibbs",
-            "role": "fisherman",
-            "confidence": 0,
-            "healthStatus": 3,
-            "physical": [{
-                "athleticism": 6,
-                "athleticismEXP": 0,
-                "dexterity": 5,
-                "dexterityEXP": 0,
-                "inspiration": 2
-            }],
-            "cognitive": [{
-                "wisdom": 9,
-                "wisdomEXP": 0,
-                "perceptiveness": 7,
-                "perceptivenessEXP": 100,
-                "inspiration": 1
-            }],
-            "personal": [{
-                "compassion": 7,
-                "compassionEXP": 0,
-                "charm": 4,
-                "charmEXP": 0,
-                "courage": 6,
-                "courageEXP": 0,
-                "inspiration": 2
-            }],
-            "inventory": [{
-                "item1": "fishing rod",
-                "item2": "net",
-                "item3": "oar",
-                "item4": "filet knife",
-                "item5": "lantern",
-                "item6": "tinder",
-                "item7": "flint",
-                "item8": "fuel",
-                "item9": "dried salmon",
-                "item10": "poncho",
-                "item11": "spear",
-                "item12": ""
-            }]
+        "name": "schmibbs",
+        "role": "fisherman",
+        "confidence": 0,
+        "healthStatus": 3,
+        "physical": [{
+            "athleticism": 6,
+            "athleticismEXP": 0,
+            "dexterity": 5,
+            "dexterityEXP": 0,
+            "inspiration": 2
+        }],
+        "cognitive": [{
+            "wisdom": 9,
+            "wisdomEXP": 0,
+            "perceptiveness": 7,
+            "perceptivenessEXP": 100,
+            "inspiration": 1
+        }],
+        "personal": [{
+            "compassion": 7,
+            "compassionEXP": 0,
+            "charm": 4,
+            "charmEXP": 0,
+            "courage": 6,
+            "courageEXP": 0,
+            "inspiration": 2
+        }],
+        "inventory": [{
+            "item1": "fishing rod",
+            "item2": "net",
+            "item3": "oar",
+            "item4": "filet knife",
+            "item5": "lantern",
+            "item6": "tinder",
+            "item7": "flint",
+            "item8": "fuel",
+            "item9": "dried salmon",
+            "item10": "poncho",
+            "item11": "spear",
+            "item12": ""
         }]
+    },
+    {
+        "name": "schmibbs_clone",
+        "role": "fisherman",
+        "confidence": 0,
+        "healthStatus": 3,
+        "physical": [{
+            "athleticism": 6,
+            "athleticismEXP": 0,
+            "dexterity": 5,
+            "dexterityEXP": 0,
+            "inspiration": 2
+        }],
+        "cognitive": [{
+            "wisdom": 9,
+            "wisdomEXP": 0,
+            "perceptiveness": 7,
+            "perceptivenessEXP": 100,
+            "inspiration": 1
+        }],
+        "personal": [{
+            "compassion": 7,
+            "compassionEXP": 0,
+            "charm": 4,
+            "charmEXP": 0,
+            "courage": 6,
+            "courageEXP": 0,
+            "inspiration": 2
+        }],
+        "inventory": [{
+            "item1": "fishing rod",
+            "item2": "net",
+            "item3": "oar",
+            "item4": "filet knife",
+            "item5": "lantern",
+            "item6": "tinder",
+            "item7": "flint",
+            "item8": "fuel",
+            "item9": "dried salmon",
+            "item10": "poncho",
+            "item11": "spear",
+            "item12": ""
+        }]        
     }]
 }

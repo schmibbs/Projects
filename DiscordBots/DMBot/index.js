@@ -2,6 +2,7 @@ const Discord = require('discord.js');              //create a variable (using k
 const FuncOBJ = require('./functions.js');
 const DieOBJ = require('./die.js');
 const { prefix, token} = require('./config.json');  //puts properties from config so that you can use the values defined there
+const skrim = require('./GamesData/SkyrimVillager.json');
 const client = new Discord.Client(); 
 const funcs = new FuncOBJ("testName");
 const die_1 = new DieOBJ(1, 20);
@@ -83,6 +84,18 @@ client.on('message', message => {
             for (die in dieArr)
                 message.channel.send("Die number " + (+die + 1) + ": (" + dieArr[die].getInterval() + ", " + dieArr[die].getLimit() + ")");
             message.channel.send("Finished listing all of the dice in play");
+        }
+    }
+
+    if (message.content.startsWith(prefix + "view")) {
+        var arg = message.content.substring(7);
+       
+        if (arg.substring(0, 8) == "schmibbs") {
+            var embed = new Discord.RichEmbed();
+            embed.setAuthor(skrim.players[0].name);
+            embed.setColor("#b4da55");
+            embed.addField("role: \n" + skrim.players[0].role);
+            message.channel.send(embed);
         }
     }
 })
