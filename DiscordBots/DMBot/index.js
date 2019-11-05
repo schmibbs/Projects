@@ -89,14 +89,74 @@ client.on('message', message => {
 
     if (message.content.startsWith(prefix + "view")) {
         var arg = message.content.substring(7);
-       
-        if (arg.substring(0, 8) == "schmibbs") {
-            var embed = new Discord.RichEmbed();
-            embed.setAuthor(skrim.players[0].name);
-            embed.setColor("#b4da55");
-            embed.addField("role: \n" + skrim.players[0].role);
-            message.channel.send(embed);
+        var found = false;  
+        //used to display an incon that represents the players health(ok, bleeding, dying, dead)
+        const HEALTH_STAUS = [
+                "https://i.kym-cdn.com/photos/images/newsfeed/000/858/776/f2e.jpg_large",
+                "https://i.kym-cdn.com/photos/images/newsfeed/000/044/032/heart-attack.jpg",
+                "https://static01.nyt.com/images/2018/04/22/magazine/22mag-tip/22mag-22tip-t_CA0-articleLarge.jpg?quality=75&auto=webp&disable=upscale",
+                "https://ih1.redbubble.net/image.213630379.6425/flat,550x550,075,f.jpg",
+                "https://vignette.wikia.nocookie.net/pixar/images/1/1b/Forky_Asks_a_Question_Poster.jpg/revision/latest?cb=20190823231947" 
+                ];
+        for (var i = 0; i < skrim.players.length; i++) {
+            if (arg == skrim.players[i].name) {
+                found = true;
+                var embed = new Discord.RichEmbed();
+                embed.setThumbnail("https://thumbs.gfycat.com/IdolizedOffensiveAfricanelephant-size_restricted.gif");
+                if (skrim.players[i].healthStatus == 3) {
+                    embed.setAuthor(skrim.players[i].name, HEALTH_STAUS[3]);
+                }
+                else if (skrim.players[i].healthStatus == 2) {
+                    embed.setAuthor(skrim.players[i].name, HEALTH_STAUS[2]);
+                }
+                else if (skrim.players[i].healthStatus == 1) {
+                    embed.setAuthor(skrim.players[i].name, HEALTH_STAUS[1]);
+                }
+                else if (skrim.players[i].healthStatus == 0) {
+                    embed.setAuthor(skrim.players[i].name, HEALTH_STAUS[0]);
+                }
+                else {
+                    embed.setAuthor(skrim.players[i].name, HEALTH_STAUS[4]);
+                }
+                embed.setColor("#031fb5");
+                embed.addField("Role", skrim.players[i].role, false);
+                embed.addBlankField();
+                //adds physical attributes to a field
+                embed.addField("Physical",  "Athleticism: " + skrim.players[i].physical[0].athleticism + 
+                                            "\nAth EXP: " + skrim.players[i].physical[0].athleticismEXP +
+                                            "\nDexterity: " + skrim.players[i].physical[0].dexterity +
+                                            "\nDex EXP: " + skrim.players[i].physical[0].dexterityEXP +
+                                            "\nInspiration: " + skrim.players[i].physical[0].inspiration, true);
+                //adds cognititive attributes to a field
+                embed.addField("Cognititive",   "Wisdom: " + skrim.players[i].cognitive[0].wisdom + 
+                                                "\nWis EXP: " + skrim.players[i].cognitive[0].wisdomEXP + 
+                                                "\nPerceptiveness: " + skrim.players[i].cognitive[0].perceptiveness + 
+                                                "\nPer EXP: " + skrim.players[i].cognitive[0].perceptivenessEXP + 
+                                                "\nInspiration: " + skrim.players[i].cognitive[0].inspiration, true);
+                //adds personal attributes to a field 
+                embed.addField("Personal",  "Compassion: " + skrim.players[i].personal[0].compassion + 
+                                            "\nCmp EXP: " + skrim.players[i].personal[0].compassionEXP + 
+                                            "\nCharm: " + skrim.players[i].personal[0].charm + 
+                                            "\nChm EXP: " + skrim.players[i].personal[0].charmEXP + 
+                                            "\nCourage: " + skrim.players[i].personal[0].courage + 
+                                            "\nCrg EXP: " + skrim.players[i].personal[0].courageEXP + 
+                                            "\nInspiration: " + skrim.players[i].personal[0].inspiration, true);
+                
+                //loop that adds players inventory to a string variable and puts it into a field
+                var items = "";
+                var formatCounter = 0;
+                for (itemIdx in skrim.players[i].inventory[0]) {
+                    items += skrim.players[i].inventory[0][itemIdx] + ", ";
+                    if ((formatCounter + 1) % 3 == 0)
+                        items += "\n";
+                    formatCounter++;
+                }
+                embed.addField("Inventory", items, true);
+                message.channel.send(embed);
+            }
         }
+        if (!found)
+            message.channel.send(arg + " was not found in this game!");
     }
 })
 
