@@ -158,6 +158,10 @@ client.on('message', message => {
         if (!found)
             message.channel.send(arg + " was not found in this game!");
     }
+
+    if (message.content.startsWith(prefix + "setav")) {
+        skrim.players[0].healthStatus = 1;
+    }
 })
 
 //actually logging in; can use token property instead of inputting it here; safer
