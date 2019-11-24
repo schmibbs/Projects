@@ -5,7 +5,12 @@ const { prefix, token} = require('./config.json');  //puts properties from confi
 const skrim = require('./GamesData/SkyrimVillager.json');
 const client = new Discord.Client(); 
 const funcs = new FuncOBJ("testName");
-const die_1 = new DieOBJ(1, 20);
+const d20 = new DieOBJ(1, 20);
+const d12 = new DieOBJ(1, 12);
+const d10 = new DieOBJ(1, 10);
+const d8  = new DieOBJ(1, 8);
+const d6  = new DieOBJ(1, 6);
+const d4  = new DieOBJ(1, 4);
 const critResponses = ["https://i.imgur.com/dhMeAzK.gif", "C R I T", "Critical Roll!!", "less goooooooooo"];
 const lossResponses = [":b:ruh", "i cri everytiem", "I can't believe you've done this", "get rekt"];
 var basicLimit = 20;
@@ -20,15 +25,71 @@ client.once('ready', () => {
 //reads messages people put into text channels
 client.on('message', message => {
     //console.log(message.content);   //just prints it to the console
-
-    if(message.content.startsWith(prefix + "msg")) {
+    var input  = message.content.toLocaleLowerCase();   //using to help guard against users mis-typing commands
+    console.log(input[2]);
+    
+    if(input.substring(0, 5) == prefix + "msg" || message.content.startsWith(prefix + "msg")) {
         message.channel.send("printing generic test message");
     }
 
     if (message.content.startsWith(prefix + "roll")) {
-        var rollRes = die_1.standardRoll(basicLimit);
+        var rollRes = d20.standardRoll(basicLimit);
         message.channel.send("You rolled: " + rollRes);
         if (rollRes == 20)
+            message.channel.send(critResponses[Math.floor(Math.random() * critResponses.length)]);
+        else if (rollRes == 1)
+            message.channel.send(lossResponses[Math.floor(Math.random() * lossResponses.length)]);
+    }
+
+    if (input.substring(0, 5) == prefix + "d20") {
+        var rollRes = d20.standardRoll(20);
+        message.channel.send("You rolled: " + rollRes);
+        if (rollRes == d20.getLimit())
+            message.channel.send(critResponses[Math.floor(Math.random() * critResponses.length)]);
+        else if (rollRes == 1)
+            message.channel.send(lossResponses[Math.floor(Math.random() * lossResponses.length)]);
+    }
+
+    if (input.substring(0, 5) == prefix + "d12") {
+        var rollRes = d12.standardRoll(12);
+        message.channel.send("You rolled: " + rollRes);
+        if (rollRes == d12.getLimit())
+            message.channel.send(critResponses[Math.floor(Math.random() * critResponses.length)]);
+        else if (rollRes == 1)
+            message.channel.send(lossResponses[Math.floor(Math.random() * lossResponses.length)]);
+    }
+
+    if (input.substring(0, 5) == prefix + "d10") {
+        var rollRes = d10.standardRoll(10);
+        message.channel.send("You rolled: " + rollRes);
+        if (rollRes == d10.getLimit())
+            message.channel.send(critResponses[Math.floor(Math.random() * critResponses.length)]);
+        else if (rollRes == 1)
+            message.channel.send(lossResponses[Math.floor(Math.random() * lossResponses.length)]);
+    }
+
+    if (input.substring(0, 4) == prefix + "d8") {
+        var rollRes = d8.standardRoll(8);
+        message.channel.send("You rolled: " + rollRes);
+        if (rollRes == d8.getLimit())
+            message.channel.send(critResponses[Math.floor(Math.random() * critResponses.length)]);
+        else if (rollRes == 1)
+            message.channel.send(lossResponses[Math.floor(Math.random() * lossResponses.length)]);
+    }
+
+    if (input.substring(0, 4) == prefix + "d6") {
+        var rollRes = d6.standardRoll(6);
+        message.channel.send("You rolled: " + rollRes);
+        if (rollRes == d6.getLimit())
+            message.channel.send(critResponses[Math.floor(Math.random() * critResponses.length)]);
+        else if (rollRes == 1)
+            message.channel.send(lossResponses[Math.floor(Math.random() * lossResponses.length)]);
+    }
+
+    if (input.substring(0, 4) == prefix + "d4") {
+        var rollRes = d4.standardRoll(4);
+        message.channel.send("You rolled: " + rollRes);
+        if (rollRes == d4.getLimit())
             message.channel.send(critResponses[Math.floor(Math.random() * critResponses.length)]);
         else if (rollRes == 1)
             message.channel.send(lossResponses[Math.floor(Math.random() * lossResponses.length)]);
@@ -160,6 +221,10 @@ client.on('message', message => {
     }
 
     if (message.content.startsWith(prefix + "setav")) {
+        var player = message.content.substring(8);
+        var val = message.content.substring(9);
+        var woody = "there is a snake in my boot";
+        console.log(funcs.tokenizer(woody, 0, woody.length));
         skrim.players[0].healthStatus = 1;
     }
 })
