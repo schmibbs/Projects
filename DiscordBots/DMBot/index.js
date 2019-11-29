@@ -1,8 +1,12 @@
+//requires
 const Discord = require('discord.js');              //create a variable (using kw 'const') to get node modules from discord.js
 const FuncOBJ = require('./functions.js');
 const DieOBJ = require('./die.js');
 const { prefix, token} = require('./config.json');  //puts properties from config so that you can use the values defined there
 const skrim = require('./GamesData/SkyrimVillager.json');
+const FileSys = require('fs');
+
+//objects 
 const client = new Discord.Client(); 
 const funcs = new FuncOBJ("testName");
 const d20 = new DieOBJ(1, 20);
@@ -11,6 +15,8 @@ const d10 = new DieOBJ(1, 10);
 const d8  = new DieOBJ(1, 8);
 const d6  = new DieOBJ(1, 6);
 const d4  = new DieOBJ(1, 4);
+
+//useful variables
 const critResponses = ["https://i.imgur.com/dhMeAzK.gif", "C R I T", "Critical Roll!!", "less goooooooooo"];
 const lossResponses = [":b:ruh", "i cri everytiem", "I can't believe you've done this", "get rekt"];
 var basicLimit = 20;
@@ -26,21 +32,22 @@ client.once('ready', () => {
 client.on('message', message => {
     //console.log(message.content);   //just prints it to the console
     var input  = message.content.toLocaleLowerCase();   //using to help guard against users mis-typing commands
-    console.log(input[2]);
     
     if(input.substring(0, 5) == prefix + "msg" || message.content.startsWith(prefix + "msg")) {
         message.channel.send("printing generic test message");
     }
 
+    //used to roll a standard int from 1 to whatever basic limit is set to
     if (message.content.startsWith(prefix + "roll")) {
         var rollRes = d20.standardRoll(basicLimit);
         message.channel.send("You rolled: " + rollRes);
-        if (rollRes == 20)
+        if (rollRes == basicLimit)
             message.channel.send(critResponses[Math.floor(Math.random() * critResponses.length)]);
         else if (rollRes == 1)
             message.channel.send(lossResponses[Math.floor(Math.random() * lossResponses.length)]);
     }
 
+    //rolls a standard d20 die(1..20)
     if (input.substring(0, 5) == prefix + "d20") {
         var rollRes = d20.standardRoll(20);
         message.channel.send("You rolled: " + rollRes);
@@ -50,6 +57,7 @@ client.on('message', message => {
             message.channel.send(lossResponses[Math.floor(Math.random() * lossResponses.length)]);
     }
 
+    //rolls a standard d12 die(1..12)
     if (input.substring(0, 5) == prefix + "d12") {
         var rollRes = d12.standardRoll(12);
         message.channel.send("You rolled: " + rollRes);
@@ -59,6 +67,7 @@ client.on('message', message => {
             message.channel.send(lossResponses[Math.floor(Math.random() * lossResponses.length)]);
     }
 
+    //rolls a standard d10 die(1..10)
     if (input.substring(0, 5) == prefix + "d10") {
         var rollRes = d10.standardRoll(10);
         message.channel.send("You rolled: " + rollRes);
@@ -68,6 +77,7 @@ client.on('message', message => {
             message.channel.send(lossResponses[Math.floor(Math.random() * lossResponses.length)]);
     }
 
+    //rolls a standard d8 die(1..8)
     if (input.substring(0, 4) == prefix + "d8") {
         var rollRes = d8.standardRoll(8);
         message.channel.send("You rolled: " + rollRes);
@@ -77,6 +87,7 @@ client.on('message', message => {
             message.channel.send(lossResponses[Math.floor(Math.random() * lossResponses.length)]);
     }
 
+    //rolls a standard d6 die(1..6)    
     if (input.substring(0, 4) == prefix + "d6") {
         var rollRes = d6.standardRoll(6);
         message.channel.send("You rolled: " + rollRes);
@@ -86,6 +97,7 @@ client.on('message', message => {
             message.channel.send(lossResponses[Math.floor(Math.random() * lossResponses.length)]);
     }
 
+    //rolls a standard d4 die(1..4)    
     if (input.substring(0, 4) == prefix + "d4") {
         var rollRes = d4.standardRoll(4);
         message.channel.send("You rolled: " + rollRes);
@@ -95,6 +107,7 @@ client.on('message', message => {
             message.channel.send(lossResponses[Math.floor(Math.random() * lossResponses.length)]);
     }
 
+    //used to create sets of dice that may skip numbers ex. percentage can be one d00 and a d10
     if (message.content.startsWith(prefix + "setdie")) {
         var argIndex = 9;
         //console.log("Len--> " + message.content.length);
@@ -136,18 +149,34 @@ client.on('message', message => {
         }
     }
 
-    if (message.content.startsWith(prefix + "checkDie")) {
-        message.channel.send("The following dies are in play");
+    //Lists the dice that are currently stored in dieArr
+    if (message.content.startsWith(prefix + "checkdie")) {
         if (dieArr[0] == null) {
             message.channel.send("There are no dice. Add some by typing this\n\">>setdie amount interval max, amount interval max, amo..\"");
         }
         else {
+            message.channel.send("The following dies are in play");
             for (die in dieArr)
                 message.channel.send("Die number " + (+die + 1) + ": (" + dieArr[die].getInterval() + ", " + dieArr[die].getLimit() + ")");
             message.channel.send("Finished listing all of the dice in play");
         }
     }
 
+    //rolls all the dice in the dieArr and send the sum to the channel from which it was called
+    if (input.substring(0, 9) == prefix + "mulroll") {
+        var res = 0;
+        if (dieArr.length > 0) {
+            for(die in dieArr) {
+                res += dieArr[die].intervalRoll(this.getInterval, this.getLimit);
+            }
+            message.channel.send("You rolled " + res);
+        }
+        else {
+            message.channel.send("There are no special dice to roll");
+        }
+    }
+
+    //used to view the stats, health, and inventory on a player
     if (message.content.startsWith(prefix + "view")) {
         var arg = message.content.substring(7);
         var found = false;  
@@ -220,12 +249,90 @@ client.on('message', message => {
             message.channel.send(arg + " was not found in this game!");
     }
 
+    //used to change values in a player card that is stored in a JSON format
     if (message.content.startsWith(prefix + "setav")) {
         var player = message.content.substring(8);
         var val = message.content.substring(9);
-        var woody = "there is a snake in my boot";
-        console.log(funcs.tokenizer(woody, 0, woody.length));
-        skrim.players[0].healthStatus = 1;
+        const tokens = funcs.tokenizer(input, 8, input.length);
+        //skrim.players[0].healthStatus = 21;
+        console.log("Arr contents vvv");
+        for (tok in tokens)
+            console.log(tokens[tok]);
+
+        //find the player
+        var found = false;
+        for (var i = 0; i < skrim.players.length; i++) {
+            if (tokens[0] == skrim.players[i].name) {
+                found == true;
+                //find the value to change and change it     
+                var keys = Object.keys("./GamesData/SkyrimVillager.json");
+                for (var j = 0; j < keys.length; j++) {
+                    if (tokens[1] == keys[j]) {
+                        skrim.players[i].keys[j] = tokens[2];
+                        //save the file for later use (consider a seperate closing method for efficiency later)
+                        var toSave = JSON.stringify(skrim, null, 2);    
+                        FileSys.writeFile("./GamesData/SkyrimVillager.json", toSave, done);
+                
+                        function done() {
+                            console.log("done here");
+                        }                        
+                    }
+                }
+            }
+        }
+        if (!found)
+            message.channel.send(tokens[0] + " was not found!");
+    }
+
+    if (input.substring(0, 3) == prefix + ".") {
+        const tokens = funcs.tokenizer(input, 4, input.length);
+        var a = "";
+        var b = "";
+        for (var i = 0; i < tokens[0].length; i++) {
+            a += tokens[0].charCodeAt(i) + " ";
+            b += skrim.players[0].name.charCodeAt(i)+ " ";
+        }
+        
+        console.log(a);
+        console.log(b);
+        console.log(tokens[0] == skrim.players[0].name);
+        console.log(tokens[1] == "health");
+        console.log(tokens[2] == "2")
+        
+        for (a in tokens)
+            console.log(tokens[a]);
+    }
+    //sets the basic limit. 
+    if (input.substring(0, 10) == prefix + "setlimit") {
+        if (input.length < 11) {
+            message.channel.send("Input a positive number");
+        }
+        else {
+            var newLimit = parseInt(Math.floor((input.substring(11))));
+            if (isNaN(newLimit) || newLimit <= 1)
+                message.channel.send("could not set the new limit. You tried changing it to: " + message.content.substring(11));
+            else {
+                basicLimit = newLimit;
+                message.channel.send("The new limit is now " + basicLimit);
+            }
+        }
+    }
+
+    //creates a rich embed of DMBot's commands and sends them to the channel from which it was called
+    if (input.substring(0, 6) == prefix + "help") {
+        var embed = new Discord.RichEmbed();
+        embed.setThumbnail("https://i.kym-cdn.com/entries/icons/original/000/016/546/hidethepainharold.jpg");
+        embed.setAuthor("DM Bot");
+        embed.setColor("#61edb8");
+        embed.addBlankField();
+        embed.addField(">>d20 (or 12, 8, 6, 4)", "rolls a number from 1 to the number after d", false);
+        embed.addField(">>roll", "rolls a number from 1 to a max limit. Default is 20", false);
+        embed.addField(">>setlimit number", "changes the max default number that >>roll will work with", false);
+        embed.addField(">>checkDie", "lists the dice that are currently available", false);
+        embed.addField(">>setDie amt step max, amt step...", "adds dice by the amount, the interval between numbers, and the upper limit. Use commas to seperate sets", false);
+        embed.addField(">>view name", "brings up the stats for the specified player", false);
+
+        message.channel.send(embed);
     }
 })
 

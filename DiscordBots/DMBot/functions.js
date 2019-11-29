@@ -4,42 +4,43 @@ class Functions {
         this.name = name;
     }
 
-    //generates a positive random number given some upper limit
-    randNum(upperLim) {
-        return Math.floor(Math.random() * upperLim) + 1;
-    }
-
-    waitPls(str, desiredResponse) {
-        if (str == desiredResponse) {
-            return true;
+    //helper function to see if some key was found in an array
+    finder(word, arr) {
+        for (i in arr) {
+            if (arr[i] == word) {
+                return true;
+            }
         }
-        else {
-            return false;
-        }
+        return false;
     }
 
     //takes a string and returns the index right before a seperating space
     tokenizer(str, startIdx, endIdx) {
         var blanksArr = [];
+        var tokenArr = [];
+        blanksArr.push(startIdx);
         for (var i = startIdx; i < endIdx; i++) {
             if (str[i] == ' ') {
-                blanksArr.push(i+1);
+                blanksArr.push(i + 1);
             }
         }
-
+        /*
         console.log("the indinces after blank spaces are ");
         for (var spot in blanksArr)
             console.log(blanksArr[spot] + " ");
 
         console.log("\nthe actual tokens are..")
-        var start = 0
-        var end = blanksArr[0];
-        for (var word in blanksArr) {
-            console.log(str.substring(start, end));
-            start = end;
-            end = blanksArr[word];
-        }
-        return 0;
+        */
+        for (var word = 0; word < blanksArr.length; word++) {
+            var start = blanksArr[word];
+            var end = blanksArr[word + 1];
+            //console.log(str.substring(start, end));
+            if (end > start)
+                tokenArr.push(str.substring(start, end-1));
+            else
+            tokenArr.push(str.substring(start, end));
+        }   
+        return tokenArr;
     }
 }
 
