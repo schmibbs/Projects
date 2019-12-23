@@ -152,7 +152,7 @@ client.on('message', message => {
     //Lists the dice that are currently stored in dieArr
     if (message.content.startsWith(prefix + "checkdie")) {
         if (dieArr[0] == null) {
-            message.channel.send("There are no dice. Add some by typing this\n\">>setdie amount interval max, amount interval max, amo..\"");
+            message.channel.send("There are no dice. Add some by typing this\n\"" + prefix + "setdie amount interval max, amount interval max, amo..\"");
         }
         else {
             message.channel.send("The following dies are in play");
@@ -162,12 +162,20 @@ client.on('message', message => {
         }
     }
 
+    //Deletes the dice stored in dieArr to be reused for another set
+    if (input.substring(0, 10) == prefix + "cleardie") {
+        for (die in dieArr) {
+            dieArr.pop();
+        }
+        dieArr.pop();   //clears out the last die from when the original loop exits
+        message.channel.send("Finished clearing old dice. Add more with " + prefix + "setdie amt interval limit, amt.. or use a standard die to continue");
+    }
     //rolls all the dice in the dieArr and send the sum to the channel from which it was called
     if (input.substring(0, 9) == prefix + "mulroll") {
         var res = 0;
         if (dieArr.length > 0) {
             for(die in dieArr) {
-                res += dieArr[die].intervalRoll(this.getInterval, this.getLimit);
+                res += dieArr[die].intervalRoll(dieArr[die].getInterval(), dieArr[die].getLimit());
             }
             message.channel.send("You rolled " + res);
         }
@@ -325,12 +333,13 @@ client.on('message', message => {
         embed.setAuthor("DM Bot");
         embed.setColor("#61edb8");
         embed.addBlankField();
-        embed.addField(">>d20 (or 12, 8, 6, 4)", "rolls a number from 1 to the number after d", false);
-        embed.addField(">>roll", "rolls a number from 1 to a max limit. Default is 20", false);
-        embed.addField(">>setlimit number", "changes the max default number that >>roll will work with", false);
-        embed.addField(">>checkDie", "lists the dice that are currently available", false);
-        embed.addField(">>setDie amt step max, amt step...", "adds dice by the amount, the interval between numbers, and the upper limit. Use commas to seperate sets", false);
-        embed.addField(">>view name", "brings up the stats for the specified player", false);
+        embed.addField(prefix + "d20 (or 12, 8, 6, 4)", "rolls a number from 1 to the number after d", false);
+        embed.addField(prefix + "roll", "rolls a number from 1 to a max limit. Default is 20", false);
+        embed.addField(prefix + "setlimit number", "changes the max default number that >>roll will work with", false);
+        embed.addField(prefix + "checkDie", "lists the dice that are currently available", false);
+        embed.addField(prefix + "setDie amt step max, amt step...", "adds dice by the amount, the interval between numbers, and the upper limit. Use commas to seperate sets", false);
+        embed.addField(prefix + "clearDie", "Eliminates the dice that are currently in play", false);
+        embed.addField(prefix + "view name", "brings up the stats for the specified player", false);
 
         message.channel.send(embed);
     }
