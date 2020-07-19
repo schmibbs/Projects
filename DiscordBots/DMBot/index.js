@@ -326,6 +326,20 @@ client.on('message', message => {
         }
     }
 
+    //replies to every new message on a channel (test)
+    // fix date/operator extraction
+    if (message.channel.name == "gen2") {
+        if (/\d+/.test(message.content)) {
+            var foundDate = /\d+\/\d+\/\d+/[0];
+            var sender = message.author.username;
+            var operator = /\d+ [A-z]+/[0];
+            console.log(foundDate + "; " + sender + "; " + operator);
+        }
+        else {
+            console.log("no number found");
+        }
+    }
+
     //creates a rich embed of DMBot's commands and sends them to the channel from which it was called
     if (input.substring(0, 6) == prefix + "help") {
         var embed = new Discord.RichEmbed();
