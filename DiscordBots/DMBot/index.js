@@ -329,10 +329,16 @@ client.on('message', message => {
     //replies to every new message on a channel (test)
     // fix date/operator extraction
     if (message.channel.name == "gen2") {
-        if (/\d+/.test(message.content)) {
-            var foundDate = /\d+\/\d+\/\d+/[0];
-            var sender = message.author.username;
-            var operator = /\d+ [A-z]+/[0];
+        if (/\d+/.test(input)) {
+            var foundDate, sender, operator;
+            sender = message.author.username;
+            if (/\d+\/\d+\/\d+/.test(input)) {
+                foundDate = /\d+\/\d+\/\d+/.exec(input)[0];
+            }
+            if (/\d+ [A-z]+/.test(input)) {
+                operator = (/\d+\s+[A-z]+/.exec(input)[0]).split(" ")[1];
+            }
+
             console.log(foundDate + "; " + sender + "; " + operator);
         }
         else {
