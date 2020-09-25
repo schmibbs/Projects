@@ -310,6 +310,7 @@ client.on('message', message => {
         for (a in tokens)
             console.log(tokens[a]);
     }
+
     //sets the basic limit. 
     if (input.substring(0, 10) == prefix + "setlimit") {
         if (input.length < 11) {
@@ -327,19 +328,28 @@ client.on('message', message => {
     }
 
     //replies to every new message on a channel (test)
-    // fix date/operator extraction
     if (message.channel.name == "gen2") {
-        if (/\d+/.test(input)) {
-            var foundDate, sender, operator;
+        //do a regex to check if there is a number followed by one word (1 Doc; 3 bears; 21 savage; etc)
+        if (/\d+(\s*-\s*|\s)[A-z]+/.test(input)) {
+            var foundDate, sender, operator, amount;
             sender = message.author.username;
+
+            //check if date was supplied and assign it; o/w get message sent date
             if (/\d+\/\d+\/\d+/.test(input)) {
                 foundDate = /\d+\/\d+\/\d+/.exec(input)[0];
+            } else {
+                foundDate = message.createdAt.getMonth() + "/" + message.createdAt.getDate() + "/" + message.createdAt.getFullYear();
             }
+
+            //assign the operator
             if (/\d+ [A-z]+/.test(input)) {
                 operator = (/\d+\s+[A-z]+/.exec(input)[0]).split(" ")[1];
             }
 
-            console.log(foundDate + "; " + sender + "; " + operator);
+            //assign the amounts of plays to add
+            amount = /\d+\s+[A-z]+/.exec(input)[0].split(" ")[0];
+
+            console.log(foundDate + "; " + sender + "; " + amount + "; " + operator);
         }
         else {
             console.log("no number found");
@@ -362,6 +372,11 @@ client.on('message', message => {
         embed.addField(prefix + "view name", "brings up the stats for the specified player", false);
 
         message.channel.send(embed);
+    }
+
+    //tests the storage method from sqliteElites.py when being called as methods
+    if (input.substring(0, 11) == prefix + "testStore") {
+        
     }
 })
 
