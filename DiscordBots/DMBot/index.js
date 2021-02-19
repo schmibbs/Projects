@@ -332,13 +332,19 @@ client.on('message', message => {
         //do a regex to check if there is a number followed by one word (1 Doc; 3 bears; 21 savage; etc)
         if (/\d+(\s*-\s*|\s)[A-z]+/.test(input)) {
             var foundDate, sender, operator, amount;
-            sender = message.author.username;
+
+            //check to see who got the play o/w assigns it as person who sent the original message
+            if (/[A-z]*(\s+|)-(\s+|)[0-9]\s+[A-z]+/.test(input)) {
+                sender = (/[A-z]*(\s+|)-(\s+|)[0-9]+\s+[A-z]+/.exec(input)[0].split("-")[0]).trim()
+            } else {
+                sender = message.author.username;
+            }
 
             //check if date was supplied and assign it; o/w get message sent date
             if (/\d+\/\d+\/\d+/.test(input)) {
                 foundDate = /\d+\/\d+\/\d+/.exec(input)[0];
             } else {
-                foundDate = message.createdAt.getMonth() + "/" + message.createdAt.getDate() + "/" + message.createdAt.getFullYear();
+                foundDate = (message.createdAt.getMonth() + 1) + "/" + message.createdAt.getDate() + "/" + message.createdAt.getFullYear();
             }
 
             //assign the operator
@@ -346,10 +352,11 @@ client.on('message', message => {
                 operator = (/\d+\s+[A-z]+/.exec(input)[0]).split(" ")[1];
             }
 
+            //hereeeeee
             //assign the amounts of plays to add
             amount = /\d+\s+[A-z]+/.exec(input)[0].split(" ")[0];
 
-            console.log(foundDate + "; " + sender + "; " + amount + "; " + operator);
+            console.log("-----------\nFound date: " + foundDate + "\nSender:     " + sender + "\nAmount:     " + amount + "\nOperator:   " + operator);
         }
         else {
             console.log("no number found");
